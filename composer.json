@@ -1,0 +1,5 @@
+{
+    "require": {
+        "linslin/yii2-curl": "*"
+    }
+}
