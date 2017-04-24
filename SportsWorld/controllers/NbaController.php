@@ -13,15 +13,17 @@ use app\models\NbaModel;
 class NbaController extends Controller
 {
     public function actionPlayoffs() {
-    	$model = new NbaModel();  
+    	$model = new NbaModel(); 
 
     	$scores = $model->getPlayoffGames();
 
-    	$stats = $model->getPlayoffStats(); 
+    	$ppgLeaders = $model->getPlayoffPPGLeaders(); 
 
-    	//echo print_r($stats); 
+    	$astLeaders = $model->getPlayoffAstLeaders(); 
 
-    	return $this->render('scores', ['data' => $scores, 'stats' => $stats]);
+    	$rebLeaders = $model->getPlayoffRebLeaders(); 
+
+    	return $this->render('scores', ['data' => $scores, 'ppgLeaders' => $ppgLeaders, 'astLeaders' => $astLeaders, 'rebLeaders' => $rebLeaders]);
     }
 
     //regular season action

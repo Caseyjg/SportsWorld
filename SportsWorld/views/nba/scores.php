@@ -23,24 +23,59 @@
 	</tbody>
 </table>
 
-<h3>Stats</h3>
-
+<h3>Stat Leaders</h3>
 <table border="1" cellpadding="10" >
-	<thead> </thead>
+	<thead> <th> Player </th> <th> Points/Game </th> </thead>
 	<tbody>
-	<?php for($i = 0; $i < count($stats); $i++) { ?>
+	<?php for($i = 0; $i < count($ppgLeaders); $i++) { ?>
 		<tr>
 			<td><h5>
-			<?php echo $stats[$i]->player->FirstName . ' ' . $stats[$i]->player->LastName ?>
+			<?php echo $ppgLeaders[$i]['player']['FirstName'] . ' ' .  $ppgLeaders[$i]['player']['LastName'] ?>
 			</h5></td>
-			<td><h5>
-			<?php echo $stats[$i]->team->City . ' ' . $stats[$i]->team->Name ?>
-			</h5></td>
-			<td><h5>
-			<?php //echo $stats[$i]->stats->GamesPlayed ?>
+			<td bgcolor="lightgray"><h5>
+			<?php echo $ppgLeaders[$i]['stats']['PtsPerGame']['#text'] ?>
 			</h5></td>
 		</tr>
 	<?php } ?>
 	</tbody>
 </table>
+
+<br>
+
+<table border="1" cellpadding="10" >
+	<thead> <th> Player </th> <th> Assist/Game </th> </thead>
+	<tbody>
+	<?php for($i = 0; $i < count($astLeaders); $i++) { ?>
+		<tr>
+			<td><h5>
+			<?php echo $astLeaders[$i]['player']['FirstName'] . ' ' .  $astLeaders[$i]['player']['LastName'] ?>
+			</h5></td>
+			<td bgcolor="lightgray"><h5>
+			<?php echo $astLeaders[$i]['stats']['AstPerGame']['#text'] ?>
+			</h5></td>
+		</tr>
+	<?php } ?>
+	</tbody>
+</table>
+
+<br>
+
+<table border="1" cellpadding="10" >
+	<thead> <th> Player </th> <th> Rebounds/Game </th> </thead>
+	<tbody>
+	<?php for($i = 0; $i < count($rebLeaders); $i++) { ?>
+		<tr>
+			<td><h5>
+			<?php echo $rebLeaders[$i]['player']['FirstName'] . ' ' .  $rebLeaders[$i]['player']['LastName'] ?>
+			</h5></td>
+			<td bgcolor="lightgray"><h5>
+			<?php echo $rebLeaders[$i]['stats']['RebPerGame']['#text'] ?>
+			</h5></td>
+		</tr>
+	<?php } ?>
+	</tbody>
+</table>
+
+
+
 

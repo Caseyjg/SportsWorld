@@ -6,9 +6,6 @@ use Yii;
 use yii\base\Model;
 use linslin\yii2\curl; 
 
-/**
- * ContactForm is the model behind the contact form.
- */
 class NbaModel extends Model
 {
     public function getPlayoffGames() {
@@ -20,7 +17,7 @@ class NbaModel extends Model
         if($date['mday'] < 10)
             $date['mday'] = '0' . $date['mday'];
 
-        $date = $date['year'] . $date['mon'] . $date['mday']; 
+        $date = $date['year'] . $date['mon'] . $date['mday']-1; 
 
         curl_setopt($ch, CURLOPT_URL, 'https://www.mysportsfeeds.com/api/feed/pull/nba/2017-playoff/daily_game_schedule.json?fordate=' . $date);
 
@@ -42,16 +39,10 @@ class NbaModel extends Model
 
         $arr = $result->dailygameschedule->gameentry;
 
-        $toReturn = ""; 
-        $i = 0; 
-        for($i = 0; $i < count($arr); $i++) {
-            $toReturn .= $arr[$i]->awayTeam->Name . '<br/>';
-        }
-
         return $arr; 
     }
 
-    public function getPlayoffStats() {
+    private function curlInit() {
         $ch = curl_init(); 
 
         $date = getdate(); 
@@ -74,72 +65,45 @@ class NbaModel extends Model
             'Authorization: Basic ' . base64_encode('casey' . ':' . 'portfolio3') 
             ));
 
-        $result = curl_exec($ch); 
+        return curl_exec($ch);
 
-        curl_close($ch); 
-
-        $result = json_decode($result); 
-        return $result->cumulativeplayerstats->playerstatsentry; 
-
-        //$result = json_decode($result, true); 
-        //return $result; 
-
-        //$arr = $result->dailygameschedule->gameentry;
     }
 
-    /*public function getPlayoffStats() {
-        $ch = curl_init(); 
+    private function getList() {
+        $result = $this->curlInit(); 
+        $result = json_decode($result, true); 
+        return $result['cumulativeplayerstats']['playerstatsentry'];
+    }
 
-        $date = getdate(); 
-        if($date['mon'] < 10)
-            $date['mon'] = '0' . $date['mon'];
-        if($date['mday'] < 10)
-            $date['mday'] = '0' . $date['mday'];
+    public function getPlayoffPPGLeaders() {
+        $list = $this->getList(); 
+        usort($list, array($this, 'sortByPPG'));
+        return array_slice($list, 0, 5); 
+    }
 
-        $date = $date['year'] . $date['mon'] . $date['mday']; 
+    public function getPlayoffAstLeaders() {
+        $list = $this->getList(); 
+        usort($list, array($this, 'sortByAssist'));
+        return array_slice($list, 0, 5);
+    }
 
-        curl_setopt($ch, CURLOPT_URL, 'https://www.mysportsfeeds.com/api/feed/pull/nba/2017-playoff/cumulative_player_stats.json');
+    public function getPlayoffRebLeaders() {
+        $list = $this->getList();
+        usort($list, array($this, 'sortByRebounds'));
+        return array_slice($list, 0, 5);
+    }
 
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET'); 
 
-        curl_setopt($ch, CURLOPT_ENCODING, "gzip"); 
+    private function sortByPPG($obj1, $obj2) {
+        return $obj2['stats']['PtsPerGame']['#text'] - $obj1['stats']['PtsPerGame']['#text']; 
+    }
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
+    private function sortByAssist($obj1, $obj2) {
+        return $obj2['stats']['AstPerGame']['#text'] - $obj1['stats']['AstPerGame']['#text']; 
+    }
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization: Basic ' . base64_encode('casey' . ':' . 'portfolio3') 
-            ));
-
-        $result = curl_exec($ch); 
-
-        curl_close($ch); 
-
-        $result = json_decode($result); 
-
-        //return $result->cumulativeplayerstats->playerstatsentry; 
-        $stats = $result->cumulativeplayerstats->playerstatsentry;
-        $numTeams = 0; 
-        $teams = array(); 
-
-        for($row = 0; $row < count($stats); $row++) {
-            $team = $stats[$row]->team->Name;
-            if(!in_array($team, $teams)) {
-                $teams[]=$team; 
-            }
-        }
-
-        $teamStats = array(); 
-
-        for($row = 0; $row < count($teams); $row++) {
-            $count = 0; 
-            for($col = 0; $col < count($stats); $col++) {
-                if($stats[$col]->team->Name == $teams[$row]) {
-                    $teamStats[$row][$count] = $stats[$col];
-                }
-            }
-        }
-
-        return $teamStats; 
-    }*/
+    private function sortByRebounds($obj1, $obj2) {
+        return $obj2['stats']['RebPerGame']['#text'] - $obj1['stats']['RebPerGame']['#text']; 
+    }
 
 }

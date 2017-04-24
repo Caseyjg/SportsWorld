@@ -36,10 +36,14 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
+
+        //controler/action
+
             ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'NBA', 'url' => ['/nba/playoffs']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
+            ['label' => 'NBA Playoffs', 'url' => ['/nba/playoffs']],
+            ['label' => 'NHL Playoffs', 'url' => ['/nhl/season']],
+            ['label' => 'MLB', 'url' => ['/mlb/season']],
+            /*Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
                 '<li>'
@@ -50,7 +54,7 @@ AppAsset::register($this);
                 )
                 . Html::endForm()
                 . '</li>'
-            )
+            )*/
         ],
     ]);
     NavBar::end();
