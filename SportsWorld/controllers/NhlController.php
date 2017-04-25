@@ -14,9 +14,14 @@ class NhlController extends Controller
     public function actionSeason() {
     	$model = new NhlModel(); 
 
-    	$games = $model->getDailyGames(); 
+    	$games = $model->getDailyPlayoffGames(); 
 
-    	return $this->render('scores', ['games' => $games]);
+    	$goals = $model->getPlayoffGoalLeaders();
 
+    	$assists = $model->getPlayoffAssistLeaders(); 
+
+    	$points = $model->getPlayoffPointLeaders(); 
+
+    	return $this->render('scores', ['games' => $games, 'goals' => $goals, 'assists' => $assists, 'points' => $points]);
     }
 }

@@ -16,7 +16,9 @@ class MlbController extends Controller
 
     	$games = $model->getDailyGames(); 
 
-    	return $this->render('scores', ['games' => $games]);
+    	$standings = ($model->getDivisionStandings());
+
+    	return $this->render('scores', ['games' => $games, 'standings' => $standings]);
 
     }
 }

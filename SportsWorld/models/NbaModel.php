@@ -35,11 +35,12 @@ class NbaModel extends Model
 
         curl_close($ch); 
 
-        $result = json_decode($result); 
+        $result = json_decode($result, true); 
 
-        $arr = $result->dailygameschedule->gameentry;
-
-        return $arr; 
+        if(array_key_exists('gameentry', $result['dailygameschedule']))
+            return $result['dailygameschedule']['gameentry'];
+        else 
+            return -1; 
     }
 
     private function curlInit() {
@@ -95,15 +96,31 @@ class NbaModel extends Model
 
 
     private function sortByPPG($obj1, $obj2) {
-        return $obj2['stats']['PtsPerGame']['#text'] - $obj1['stats']['PtsPerGame']['#text']; 
+        if($obj2['stats']['PtsPerGame']['#text'] < $obj1['stats']['PtsPerGame']['#text'])
+            return -1; 
+        else if($obj2['stats']['PtsPerGame']['#text'] > $obj1['stats']['PtsPerGame']['#text'])
+            return 1; 
+        else
+            return 0; 
     }
 
     private function sortByAssist($obj1, $obj2) {
-        return $obj2['stats']['AstPerGame']['#text'] - $obj1['stats']['AstPerGame']['#text']; 
+        if($obj2['stats']['AstPerGame']['#text'] < $obj1['stats']['AstPerGame']['#text'])
+            return -1; 
+        else if($obj2['stats']['AstPerGame']['#text'] > $obj1['stats']['AstPerGame']['#text'])
+            return 1; 
+        else
+            return 0; 
     }
 
     private function sortByRebounds($obj1, $obj2) {
-        return $obj2['stats']['RebPerGame']['#text'] - $obj1['stats']['RebPerGame']['#text']; 
+        //return $obj2['stats']['RebPerGame']['#text'] - $obj1['stats']['RebPerGame']['#text']; 
+        if($obj2['stats']['RebPerGame']['#text'] < $obj1['stats']['RebPerGame']['#text'])
+            return -1; 
+        else if($obj2['stats']['RebPerGame']['#text'] > $obj1['stats']['RebPerGame']['#text'])
+            return 1; 
+        else
+            return 0; 
     }
 
 }
