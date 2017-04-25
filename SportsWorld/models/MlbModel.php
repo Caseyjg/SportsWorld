@@ -37,7 +37,7 @@ class MlbModel extends Model
 
         $result = json_decode($result, true);
 
-        if($result['dailygameschedule']['gameentry'])
+        if(array_key_exists('gameentry', $result['dailygameschedule']))
             return $result['dailygameschedule']['gameentry'];
         else 
             return -1; 
